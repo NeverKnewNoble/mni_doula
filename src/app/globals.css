@@ -1,26 +1,222 @@
 @import "tailwindcss";
 
+/*
+  OMNI DOULA LTD — palette and type taken from the logo.
+  Navy and ink carry the page; the logo's gold is muted to antique brass and
+  used only for thin lines and small marks. Periwinkle lifts accents on dark.
+  Zodiak echoes the logo's bold serif; General Sans does reading and UI.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: #16246e;
+  --navy-ink: #0d1748;
+  --navy-2: #22318a;
+  --gold: #b08433;
+  --gold-light: #d9c08a;
+  --gold-deep: #7d5c1f;
+  --dusk: #b4bdf0;
+  --porcelain: #f5f6fa;
+  --mist: #e8ebf6;
+  --white: #ffffff;
+  --line: #d9ddec;
+  --muted: #545d86;
+  --error: #b42318;
+
+  --header-h: 66px;
+  --pad: clamp(20px, 4vw, 56px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: var(--navy);
+  --color-navy-ink: var(--navy-ink);
+  --color-navy-2: var(--navy-2);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-deep: var(--gold-deep);
+  --color-dusk: var(--dusk);
+  --color-porcelain: var(--porcelain);
+  --color-mist: var(--mist);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-error: var(--error);
+  --font-display: "Zodiak", Georgia, serif;
+  --font-sans: "General Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 40px);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--porcelain);
+  color: var(--navy-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--dusk); color: var(--navy-ink); }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@layer components {
+/* ---------- type scale (15 / 17 / 21 / 28 / 44 / hero) ---------- */
+.t-small { font-size: 0.9375rem; line-height: 1.5; }
+.t-lead { font-size: clamp(1.125rem, 1rem + 0.6vw, 1.3125rem); line-height: 1.55; }
+.t-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.t-head {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.t-hero {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 1.6rem + 4.6vw, 5.75rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.t-statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ---------- buttons: pills, like the nav ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 180ms, box-shadow 180ms, transform 180ms var(--ease-out);
+}
+.btn:hover { background: var(--navy-2); }
+.btn:active { transform: scale(0.98); }
+.btn[disabled] { opacity: 0.7; cursor: wait; }
+
+.btn--light { background: var(--white); color: var(--navy-ink); }
+.btn--light:hover { background: var(--mist); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--navy);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.btn--ghost:hover { background: var(--white); box-shadow: inset 0 0 0 1.5px var(--navy); }
+
+.btn--ghost-light {
+  background: transparent;
+  color: var(--white);
+  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.4);
+}
+.btn--ghost-light:hover { background: rgb(255 255 255 / 0.08); box-shadow: inset 0 0 0 1.5px #fff; }
+
+.link {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gold);
+}
+.link:hover { text-decoration-color: currentColor; }
+
+/* ---------- accordion ---------- */
+.acc { border-bottom: 1px solid var(--line); }
+.acc summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  font-family: var(--font-display);
+  font-size: 1.3125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  list-style: none;
+}
+.acc summary::-webkit-details-marker { display: none; }
+.acc .plus {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  transition: background-color 200ms, box-shadow 200ms;
+}
+.acc .plus::before,
+.acc .plus::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 15px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 240ms var(--ease-out);
+}
+.acc .plus::after { transform: rotate(90deg); }
+.acc[open] .plus { background: var(--navy); box-shadow: none; color: var(--white); }
+.acc[open] .plus::after { transform: rotate(0deg); }
+.acc--dark { border-color: rgb(255 255 255 / 0.16); }
+.acc--dark .plus { box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.3); }
+}
+
+/* ---------- the one page-load moment: the ribbon draws itself ---------- */
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes bloom {
+  from { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 20px, 0); }
+  to { opacity: 1; transform: none; }
+}
+.ribbon-path {
+  stroke-dasharray: 1;
+  animation: draw 2.2s var(--ease-out) 200ms both;
+}
+.ribbon-leaf {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: bloom 700ms var(--ease-out) 1.9s both;
+}
+.enter { animation: rise 900ms var(--ease-out) both; }
+.enter-1 { animation-delay: 120ms; }
+.enter-2 { animation-delay: 240ms; }
+.enter-3 { animation-delay: 360ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ribbon-path, .ribbon-leaf, .enter { animation: none; }
 }
